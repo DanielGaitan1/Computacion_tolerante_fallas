@@ -21,9 +21,7 @@ except ZeroDivisionError:
 2) Validación de entradas
 Antes de procesar datos, se comprueba que cumplan con el formato correcto.
 
-python
-Copiar
-Editar
+
 entrada = input("Escribe un número: ")
 if entrada.isdigit():
     print("Número válido:", int(entrada))
@@ -32,9 +30,7 @@ else:
 3) Registros de errores (logging)
 Guardan información de errores en un archivo para su análisis posterior.
 
-python
-Copiar
-Editar
+
 import logging
 
 logging.basicConfig(filename="errores.log", level=logging.ERROR)
@@ -46,13 +42,14 @@ except Exception as e:
 4) Pruebas (testing) con aserciones
 Aseguran que las funciones trabajen correctamente.
 
-python
-Copiar
-Editar
+
 def suma(a, b):
     return a + b
 
 # Prueba simple
 assert suma(2, 3) == 5
-Conclusión
+
+
+```
+**Conclusión
 El manejo de errores es fundamental para crear aplicaciones más estables y tolerantes a fallas. Usar try/except, validar entradas, registrar errores y añadir pruebas reduce fallos y evita interrupciones inesperadas.
