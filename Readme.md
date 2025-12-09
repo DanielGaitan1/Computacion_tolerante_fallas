@@ -1,6 +1,11 @@
 # Computación Tolerante a Fallas - Semestre 2025B
 
-**Alumno:** [Tu Nombre Completo]
+**Alumno:** [Daniel Gaitan Chavez]
+
+**Codigo** 219294005
+
+**Ciclo** 2025B
+
 **Proyecto:** FlameTickets Microservices Architecture
 
 Este repositorio contiene las evidencias de aprendizaje, tareas y el proyecto final de la materia.
