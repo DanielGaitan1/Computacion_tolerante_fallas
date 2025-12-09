@@ -1,0 +1,81 @@
+# -------------------
+# SERVICIO LOGIC (Python)
+# -------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logic-deployment
+spec:
+  replicas: 2  # <--- AQUÍ ESTÁ LA TOLERANCIA A FALLAS (Si uno muere, queda el otro)
+  selector:
+    matchLabels:
+      app: flame-logic
+  template:
+    metadata:
+      labels:
+        app: flame-logic
+    spec:
+      containers:
+      - name: logic-container
+        image: flame-logic:v1
+        imagePullPolicy: Never  # Importante: Usa la imagen que acabas de crear localmente
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flame-logic-service # <--- Este es el nombre DNS que usará el Frontend
+spec:
+  selector:
+    app: flame-logic
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+
+---
+# -------------------
+# SERVICIO FRONTEND (Node.js)
+# -------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flame-frontend
+  template:
+    metadata:
+      labels:
+        app: flame-frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: flame-frontend:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: LOGIC_URL
+          value: "http://flame-logic-service:5000" # <--- Conecta con el servicio de arriba
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flame-frontend-service
+spec:
+  selector:
+    app: flame-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer # <--- Esto permite entrar desde localhost
