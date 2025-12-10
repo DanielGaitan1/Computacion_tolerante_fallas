@@ -1,5 +1,3 @@
-Markdown
-
 # 🔥 FlameTickets: Arquitectura de Microservicios Resiliente
 
 **Proyecto Final & v1**
@@ -35,6 +33,9 @@ La interacción se realiza mediante **API REST** sobre HTTP.
 Implementación de **Logging Estructurado** en salida estándar (STDOUT/STDERR).
 * Kubernetes agrega los logs de todos los pods, permitiendo inspeccionar el tráfico en tiempo real mediante `kubectl logs -l app=flame-frontend`.
 
+![Logs de Trafico](./img/warning1.png)
+
+
 ### 6. Automatización (CI/CD)
 Se incluyen scripts de automatización (`deploy.ps1`) que estandarizan el proceso de:
 1.  Construcción de imágenes (Build).
@@ -59,13 +60,18 @@ El sistema fue sometido a pruebas de estrés y fallos inyectados:
 
 ### Prerrequisitos
 * Docker Desktop habilitado con Kubernetes.
+  ![imagen](./img/"helloDocker.png")
+
 * Terminal (PowerShell o Bash).
+![Docker Desktop Running](./img/ambos_corriendo.png)
 
 ### Paso 1: Clonar y Ubicarse
 ```bash
 git clone [https://github.com/DanielGaitan1/Computacion_tolerante_fallas/tree/main]
-cd Computacion_tolerante_fallas/Proyecto_Final
-Paso 2: Ejecutar Script de Automatización
+cd Computacion_tolerante_fallas/Proyecto_Final 
+```
+![Estructura del Proyecto](./img/lsRepositorio.png)
+### Paso 2: Ejecutar Script de Automatización
 Hemos creado un script que construye las imágenes y despliega los servicios automáticamente.
 
 En PowerShell:
@@ -76,45 +82,87 @@ PowerShell
 (Alternativamente, despliegue manual):
 
 ```Bash
-
 docker build -t flame-frontend:v1 ./service-frontend
 docker build -t flame-logic:v1 ./service-logic
 kubectl apply -f ./k8s/main-deployment.yaml
-Paso 3: Verificar y Probar
+```
+
+**Construyendo Frontend:**
+![Build Frontend](./img/azulBuildFrontend.png)
+
+**Construyendo Logic Service:**
+![Build Logic](./img/azul1.png)
+
+
+### Paso 3: Verificar y Probar
 Verificar que los pods estén corriendo: kubectl get pods
+
+![Deploy en Kubernetes](./img/applyCreated.png)
+
+### Paso 3: Verificar y Probar
+
+1. **Verificar que los pods estén corriendo:**
+   `kubectl get pods`
+   
+   ![Pods Corriendo](./img/get_pods.png)
+
+2. **Acceder a la web:**
+   Entra a [http://localhost](http://localhost) en tu navegador. Deberás ver la interfaz del concierto.
+   
+   ![Interfaz Web](./img/web2.png)
+
+3. **Simular una compra (Prueba de conexión):**
+   Haz clic en "Comprar Boleto". Si todo funciona, verás el ID del ticket y qué contenedor lo procesó.
+  
+   ![Compra Exitosa](./img/web3.png)
+
+4. **Verificar logs en tiempo real:**
+   `kubectl logs -l app=flame-logic`
+   
+   ![Logs de Trafico](./img/warning1.png)
 
 Acceder a la web: http://localhost
 
-Verificar logs: kubectl logs -l app=flame-logic
+---
 
-🧪 Evidencias de Resiliencia
-Prueba de Caos (Pod Deletion)
-Al eliminar un pod crítico: kubectl delete pod logic-deployment-xxxx Kubernetes detecta la discrepancia y crea una nueva instancia en < 5 segundos.
+## 🧪 Evidencias de Resiliencia (Chaos Testing)
 
-(Ver capturas en la carpeta de evidencias)
+El objetivo es demostrar que el sistema se recupera automáticamente tras un fallo crítico.
+
+### Prueba 1: Eliminación Manual de un Pod (Pod Deletion)
+
+**1. El Ataque:**
+Eliminamos manualmente un pod del servicio de lógica para simular un "crash" o fallo fatal.
+Comando: `kubectl delete pod logic-deployment-xxxxx`
+
+![Eliminando Pod](./img/delete1.png)
+
+**2. La Recuperación (Self-Healing):**
+Kubernetes detecta que falta una réplica y crea una nueva inmediatamente.
+En la siguiente captura se observa:
+* Pods antiguos (6 minutos de vida).
+* **Nuevo Pod** (39 segundos de vida) creado automáticamente para reemplazar al eliminado.
+
+![Recuperacion Automatica](./img/getPods2.png)
 
 
 ---
 
 ### 🎁 El Toque Final: El Script de "Automatización"
 
-Para que el punto 6 sea verdad, crea un archivo nuevo en la carpeta `Proyecto_Final` llamado **`deploy.ps1`** y pega esto:
+Para cumplir el objetivo de CI/CD, incluimos este script:
 
 ```powershell
-# Script de Automatización de Despliegue (CI/CD Simulado)
-Write-Host "🔥 Iniciando despliegue de FlameTickets..." -ForegroundColor Yellow
-
-# 1. Build Frontend
-Write-Host "🏗️  Construyendo Frontend..."
-docker build -t flame-frontend:v1 ./service-frontend
-
-# 2. Build Logic
-Write-Host "🏗️  Construyendo Logic Service..."
-docker build -t flame-logic:v1 ./service-logic
-
-# 3. Deploy to K8s
-Write-Host "🚀 Desplegando en Kubernetes..."
-kubectl apply -f ./k8s/main-deployment.yaml
-
-Write-Host "✅ Despliegue completado con éxito." -ForegroundColor Green
+# Aquí empieza el código que pegaste
+Write-Host "🔥 Iniciando..."
+# ... (todo el código del medio)
 Write-Host "🌐 Accede en: http://localhost"
+```  <--- ¡ESTAS TRES COMILLAS SON LAS QUE FALTABAN!
+
+---
+
+## 🧹 Limpieza del Entorno
+Para detener y eliminar todos los servicios del clúster:
+`kubectl delete -f ./k8s/main-deployment.yaml`
+
+![Limpieza](./img/delete2.png)
