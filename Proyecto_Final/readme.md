@@ -89,10 +89,6 @@ cd Computacion_tolerante_fallas/Proyecto_Final
 ### Paso 2: Ejecutar Script de Automatización
 Hemos creado un script que construye las imágenes y despliega los servicios automáticamente.
 
-En PowerShell:
-
-PowerShell
-
 ./deploy.ps1
 (Alternativamente, despliegue manual):
 
