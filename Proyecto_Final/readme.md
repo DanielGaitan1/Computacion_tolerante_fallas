@@ -101,7 +101,6 @@ Verificar que los pods estén corriendo: kubectl get pods
 
 ![Deploy en Kubernetes](./img/applyCreated.png)
 
-### Paso 3: Verificar y Probar
 
 1. **Verificar que los pods estén corriendo:**
    `kubectl get pods`
@@ -159,7 +158,7 @@ Para cumplir el objetivo de CI/CD, incluimos este script:
 Write-Host "🔥 Iniciando..."
 # ... (todo el código del medio)
 Write-Host "🌐 Accede en: http://localhost"
-```  <--- ¡ESTAS TRES COMILLAS SON LAS QUE FALTABAN!
+```  
 
 ---
 
