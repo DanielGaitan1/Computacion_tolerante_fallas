@@ -17,6 +17,12 @@ La aplicación se desacopló en dos módulos autónomos con responsabilidades ú
 * **Logic Service (Python/Flask):** Núcleo de procesamiento. Gestiona la lógica de negocio de las órdenes.
 * *Justificación:* El uso de lenguajes distintos demuestra la independencia tecnológica de cada componente.
 
+Seguridad y Aislamiento de Red Aunque el servicio es público, se implementó una estrategia de Seguridad por Aislamiento (Network Isolation):
+
+Internal DNS Resolution: La comunicación entre microservicios no viaja por internet pública, sino a través de la red interna del clúster (ClusterIP), cifrada por la capa de red de Kubernetes.
+
+Backend Protegido: El servicio Logic no tiene IP pública; solo es accesible a través del Frontend, previniendo ataques directos a la API de lógica.
+
 ### 2. Contenerización con Docker
 Cada microservicio cuenta con su propio `Dockerfile`, utilizando imágenes base ligeras (`node:18-alpine` y `python:3.9-slim`) para garantizar portabilidad y consistencia entre entornos de desarrollo y producción.
 
@@ -30,6 +36,13 @@ La interacción se realiza mediante **API REST** sobre HTTP.
 * Se utiliza el DNS interno de Kubernetes (`flame-logic-service`) para el descubrimiento de servicios, eliminando la dependencia de IPs fijas.
 
 ### 5. Monitorización y Observabilidad
+
+Para mantener la arquitectura ligera ("Lightweight Architecture"), optamos por la Observabilidad Nativa de Kubernetes en lugar de herramientas externas pesadas como Istio.
+
+Centralización de Logs: Kubernetes recolecta los streams STDOUT/STDERR de todos los contenedores.
+
+Inspección en Tiempo Real: Uso de kubectl logs para trazabilidad inmediata de errores y confirmación de transacciones (HTTP 200/500), como se muestra en las evidencias.
+
 Implementación de **Logging Estructurado** en salida estándar (STDOUT/STDERR).
 * Kubernetes agrega los logs de todos los pods, permitiendo inspeccionar el tráfico en tiempo real mediante `kubectl logs -l app=flame-frontend`.
 
@@ -149,16 +162,8 @@ En la siguiente captura se observa:
 
 ---
 
-### 🎁 El Toque Final: El Script de "Automatización"
-
-Para cumplir el objetivo de CI/CD, incluimos este script:
-
-```powershell
-# Aquí empieza el código que pegaste
-Write-Host "🔥 Iniciando..."
-# ... (todo el código del medio)
 Write-Host "🌐 Accede en: http://localhost"
-```  
+
 
 ---
 
@@ -167,3 +172,8 @@ Para detener y eliminar todos los servicios del clúster:
 `kubectl delete -f ./k8s/main-deployment.yaml`
 
 ![Limpieza](./img/delete2.png)
+
+---
+## 📊 Presentación Ejecutiva
+Puedes consultar la presentación detallada del proyecto y la arquitectura aquí:
+[📄 Ver Presentación del Proyecto (PDF)](./Presentacion_Proyecto.pdf)
