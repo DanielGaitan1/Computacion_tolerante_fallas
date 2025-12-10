@@ -60,9 +60,11 @@ El sistema fue sometido a pruebas de estrés y fallos inyectados:
 
 ### Prerrequisitos
 * Docker Desktop habilitado con Kubernetes.
-  ![imagen](./img/"helloDocker.png")
+
+  ![imagen](./img/helloDocker.png)
 
 * Terminal (PowerShell o Bash).
+
 ![Docker Desktop Running](./img/ambos_corriendo.png)
 
 ### Paso 1: Clonar y Ubicarse
