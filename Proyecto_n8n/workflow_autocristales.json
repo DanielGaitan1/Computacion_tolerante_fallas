@@ -1,0 +1,145 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-cristales",
+        "options": {}
+      },
+      "id": "91c51c39-92cf-4a4a-ba7f-037d75fe93d0",
+      "name": "Webhook (Entrada)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -64
+      ],
+      "webhookId": "e9b5b5b5-0000-4000-8000-000000000001"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulamos la respuesta perfecta para la presentación\nreturn {\n  json: {\n    intencion: \"Cotización de Parabrisas\",\n    auto: {\n      marca: \"Nissan\",\n      modelo: \"Tsuru\",\n      año: \"2010\"\n    },\n    respuesta_sugerida: \"Hola 👋, con gusto te apoyamos. El parabrisas para tu Nissan Tsuru 2010 lo tenemos disponible. ¿Te gustaría que te agendemos una cita para instalación?\"\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        -64
+      ],
+      "id": "866b2ecb-27a3-4656-9347-02cf3a65f7a3",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "chatId": "6208430457",
+        "text": "=🚨 *NUEVO PROSPECTO*  🚗 *Coche:* {{ $json.auto.marca }} {{ $json.auto.modelo }} {{ $json.auto.año }} 💬 *Cliente dice:* {{ $json.intencion }}  🤖 *Respuesta Sugerida:* {{ $json.respuesta_sugerida }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -64
+      ],
+      "id": "96782543-7ff2-4487-8a75-ab670673b826",
+      "name": "Send a text message",
+      "webhookId": "797ea978-4017-47f5-b6f3-613b8e72f218",
+      "credentials": {
+        "telegramApi": {
+          "id": "NLA6wqHgvYxksm8i",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=echo \"{{ $now }} | {{ $json.auto.marca }} {{ $json.auto.modelo }} | {{ $json.intencion }}\" >> /home/node/.n8n/leads_ventas.csv"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -64
+      ],
+      "id": "ddc63626-9da1-4f82-af09-9002c14366d0",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "command": "cat /home/node/.n8n/leads_ventas.csv"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -64
+      ],
+      "id": "eb841a13-aa0d-41bf-895f-f56248513e9e",
+      "name": "Execute Command1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (Entrada)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "867ecd33-1ff5-4837-8e75-1c5dd6f17b96",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "264329a86cb520894c0a6850a886b631b014a88b45e35e1304d14aa1830f7857"
+  },
+  "id": "XrARByO0O7aZafSj",
+  "tags": []
+}
