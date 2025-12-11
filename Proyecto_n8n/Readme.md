@@ -40,9 +40,11 @@ Para garantizar la portabilidad y el aislamiento, el sistema se desplegó utiliz
 El flujo inicia con un **Webhook (POST)** que recibe datos estructurados desde herramientas de prueba (Postman) o formularios web.
 
 **Trigger (Postman):**
+
 ![Postman](./evidencias/4_postman_trigger.png)
 
 **Recepción Exitosa:**
+
 ![Webhook Payload](./evidencias/5_webhook_received.png)
 
 ---
